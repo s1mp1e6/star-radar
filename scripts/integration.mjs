@@ -151,7 +151,7 @@ async function main() {
     assert(r.d?.ok && r.d.data.tables.projects > 0, "debug 失败");
     console.log("✅ health + debug");
 
-    console.log("\n🎉 集成全链路 9 项全部通过");
+    console.log("\n🎉 集成全链路 10 项全部通过");
   } finally {
     killTree(dev);
     killTree(mock);
