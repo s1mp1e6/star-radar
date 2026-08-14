@@ -1,4 +1,4 @@
-/* 首页：日期卡片网格 */
+/* 首页：hero 统计总览 + 日期卡片网格 + 新手引导 */
 import { api, apiGet, toast, hintAuth, notifyChanged, gradient, esc } from "../app.js";
 
 const grid = document.getElementById("grid");
@@ -6,13 +6,22 @@ const skelBox = document.getElementById("skelBox");
 const statusBox = document.getElementById("statusBox");
 
 const weekday = (date) => {
-  const w = new Date(`${date}T00:00:00+08:00`).toLocaleDateString("zh-CN", { weekday: "long" });
-  return Number.isNaN(new Date(`${date}T00:00:00+08:00`).getTime()) ? "" : w;
+  const d = new Date(`${date}T00:00:00+08:00`);
+  return Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("zh-CN", { weekday: "long" });
 };
+
+function fillStats(dates) {
+  document.getElementById("statDays").textContent = dates.length;
+  document.getElementById("statProjects").textContent = dates.reduce((s, d) => s + d.project_count, 0);
+  apiGet("/favs")
+    .then((favs) => (document.getElementById("statFavs").textContent = favs.length))
+    .catch(() => (document.getElementById("statFavs").textContent = "–"));
+}
 
 function render(dates) {
   skelBox.innerHTML = "";
   statusBox.innerHTML = "";
+  fillStats(dates);
   grid.innerHTML = dates
     .map(
       (d) => `
@@ -34,8 +43,13 @@ function renderEmpty() {
     <div class="status-card">
       <div class="big">📡</div>
       <h3>还没有日报数据</h3>
-      <p>抓取任务每天北京时间 05:00 自动运行，也可手动触发一次</p>
-      <button class="btn btn-primary" id="triggerBtn">⚡ 立即抓取</button>
+      <p>抓取任务每天北京时间 05:00 自动运行，第一次使用可先手动抓一批</p>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><span>到 <a href="settings.html">设置页</a> 粘贴管理员令牌（在项目目录 <code>admin-token.txt</code>）</span></div>
+        <div class="step"><span class="n">2</span><span>回来点下方按钮，立即抓取今天的 25 个新星项目</span></div>
+        <div class="step"><span class="n">3</span><span>（可选）在设置页配置 AI 供应商，给每个项目生成六维深度详解</span></div>
+      </div>
+      <button class="btn btn-primary" id="triggerBtn" style="margin-top:14px">⚡ 立即抓取</button>
     </div>`;
   document.getElementById("triggerBtn")?.addEventListener("click", async () => {
     try {

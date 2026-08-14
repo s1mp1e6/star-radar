@@ -25,7 +25,8 @@ function cardHTML(p, i) {
       <input class="input" data-f="model" placeholder="model（如 deepseek-chat）" value="${esc(p.model)}">
     </div>
     <div class="prow">
-      <input class="input" data-f="api_key" type="password" placeholder="${p.has_key ? "🔒 已保存，留空=不修改" : "api_key"}" value="" style="flex:2">
+      <input class="input" data-f="api_key" type="password" placeholder="${p.has_key ? "🔒 输入新 key 以更换" : "api_key（必填）"}" value="" style="flex:2">
+      ${p.has_key ? '<span class="key-status">✅ 已保存（只显示状态，不回显内容）</span>' : ""}
       <input class="input" data-f="tag" placeholder="标签（免费/主力）" value="${esc(p.tag)}" style="max-width:130px">
     </div>
     <div class="prow">
@@ -195,9 +196,17 @@ document.getElementById("saveProvidersBtn").addEventListener("click", async () =
   });
   try {
     await api("/providers", { method: "POST", body: { providers: list } });
-    toast(`已保存 ${list.length} 个供应商`, "success");
+    toast(`已保存 ${list.length} 个供应商（key 已加密存云端，界面不回显）`, "success");
+    document.getElementById("saveStatus").textContent = `✅ 已保存 ${new Date().toLocaleTimeString("zh-CN")}`;
     await load();
   } catch (e) {
+    document.getElementById("saveStatus").textContent = "❌ 未保存";
+    // 关键修复：401 时保留卡片与已填内容，明确告知原因
+    if (e.status === 401 || e.code === "unauthorized" || e.code === "admin_token_missing") {
+      box.insertAdjacentHTML("afterbegin",
+        '<div class="warn-banner">⚠️ 保存失败：管理员令牌未保存或无效。请先在上方「🔑 管理员令牌」粘贴 <code>admin-token.txt</code> 里的令牌并点保存，你填的 key 都还在，保存令牌后直接再点「保存全部」即可。</div>');
+      return;
+    }
     if (!hintAuth(e)) toast(`保存失败: ${e.message}`);
   }
 });
@@ -209,6 +218,10 @@ async function load() {
     render();
     bindActions();
   } catch (e) {
+    if (e.status === 401 || e.code === "unauthorized") {
+      box.innerHTML = '<div class="hint">⚠️ 需要管理员令牌：请先在上方「🔑 管理员令牌」粘贴令牌（在项目目录 admin-token.txt 文件里）并点保存，再回来配置。</div>';
+      return;
+    }
     box.innerHTML = `<div class="hint">加载失败: ${esc(e.message)}</div>`;
   }
 }
@@ -224,3 +237,6 @@ async function load() {
   }
   await load();
 })();
+
+/* 令牌保存后自动刷新（避免用户保存令牌后还要手动刷新页面） */
+window.addEventListener("sr-token-saved", () => load());

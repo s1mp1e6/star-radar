@@ -1,12 +1,59 @@
-/* 设置页：管理员令牌 + 系统状态（AI 供应商配置 M4） */
+/* 设置页：管理员令牌 + GitHub Token + 系统状态（AI 供应商见 settings-providers.js） */
 import { api, toast, getToken, setToken, esc, hintAuth } from "../app.js";
 
 const tokenInput = document.getElementById("tokenInput");
 tokenInput.value = getToken();
 
+function updateTokenBanner() {
+  const banner = document.getElementById("tokenBanner");
+  banner.style.display = getToken() ? "none" : "";
+}
+
 document.getElementById("saveTokenBtn").addEventListener("click", () => {
   setToken(tokenInput.value.trim());
   toast("令牌已保存到本浏览器", "success");
+  updateTokenBanner();
+  loadGhStatus();
+  // 通知供应商模块刷新（令牌就绪后才能加载/保存配置）
+  window.dispatchEvent(new CustomEvent("sr-token-saved"));
+});
+
+/* ---------- GitHub Token ---------- */
+async function loadGhStatus() {
+  const el = document.getElementById("githubTokenStatus");
+  try {
+    const d = await api("/settings/github-token");
+    el.textContent = d.has_token
+      ? `✅ 已配置（来源：${d.source === "secret" ? "CF Secret" : "网页设置"}）`
+      : "⚠️ 未配置——当前为未认证模式（60 次/小时，共享 IP 可能耗尽配额）";
+  } catch {
+    el.textContent = "状态加载失败";
+  }
+}
+document.getElementById("saveGhTokenBtn").addEventListener("click", async () => {
+  const v = document.getElementById("githubTokenInput").value.trim();
+  if (!v) {
+    toast("请先粘贴 Token（清空请用「清空」按钮）");
+    return;
+  }
+  try {
+    await api("/settings/github-token", { method: "POST", body: { token: v } });
+    document.getElementById("githubTokenInput").value = "";
+    toast("GitHub Token 已保存", "success");
+    loadGhStatus();
+  } catch (e) {
+    if (!hintAuth(e)) toast(`保存失败: ${e.message}`);
+  }
+});
+document.getElementById("clearGhTokenBtn").addEventListener("click", async () => {
+  if (!confirm("确定清空 GitHub Token？清空后回到未认证模式（配额 60 次/小时）。")) return;
+  try {
+    await api("/settings/github-token", { method: "POST", body: { token: "" } });
+    toast("已清空");
+    loadGhStatus();
+  } catch (e) {
+    if (!hintAuth(e)) toast(`操作失败: ${e.message}`);
+  }
 });
 
 const sysStatus = document.getElementById("sysStatus");
@@ -39,3 +86,6 @@ document.getElementById("loadStatusBtn").addEventListener("click", async () => {
     if (!hintAuth(e)) toast(`加载失败: ${e.message}`);
   }
 });
+
+loadGhStatus();
+updateTokenBanner();

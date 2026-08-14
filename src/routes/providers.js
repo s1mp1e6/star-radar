@@ -99,8 +99,7 @@ export async function handleProviderTest(request, env) {
   return json(result);
 }
 
-export function handlePresets(request, env) {
-  const authErr = requireToken(request, env);
-  if (authErr) return fail(authErr.error, authErr.msg, 401);
+/* 预设清单不含任何秘密，公开可读（设置页免密加载体验） */
+export function handlePresets() {
   return json(PRESETS);
 }

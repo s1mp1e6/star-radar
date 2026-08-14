@@ -45,3 +45,10 @@ export async function setSetting(env, key, value) {
     .bind(key, value)
     .run();
 }
+
+/* GitHub Token 读取优先级：CF Secret（env.GITHUB_TOKEN）> D1 settings（网页配置，ADR-0004） */
+export async function getGitHubToken(env) {
+  if (env.GITHUB_TOKEN) return env.GITHUB_TOKEN;
+  const v = await getSetting(env, "github_token");
+  return v || null;
+}

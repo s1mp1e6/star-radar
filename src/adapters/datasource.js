@@ -3,6 +3,8 @@
  *
  * ⚠️ GitHub Search 硬限制：单查询最多 5 个 AND/OR/NOT 操作符（实测 422 验证）。
  * 因此查询层只放 4 个高价值 NOT（留 1 个余量），全量关键词在 post-filter 层过滤。 */
+import { getGitHubToken } from "../lib/db.js";
+
 export const QUERY_EXCLUDE = ["量化", "回测", "股票", "A股"];
 export const ALL_EXCLUDE = [
   "量化", "回测", "股票", "A股", "基金", "债券", "期货", "期权",
@@ -83,17 +85,18 @@ export async function searchRepos(query, { perPage = 30, retries = 3, token = nu
 /* 主数据源：新星榜（created 窗口 1→2→3 天扩展），失败切活跃榜备用 */
 export class SearchApiSource {
   constructor(env) {
-    this.token = env?.GITHUB_TOKEN || null;
+    this.env = env;
   }
 
   async fetchTopRepos({ limit = 25 } = {}) {
+    const token = await getGitHubToken(this.env);
     let lastItems = [];
     let lastErr = null;
     for (const days of [1, 2, 3]) {
       try {
         const q = buildSearchQuery(dateStr(days));
         // 缓冲 +20：post-filter 会删掉部分结果，多拉保证过滤后仍够 limit
-        const raw = await searchRepos(q, { perPage: Math.min(limit + 20, 100), token: this.token });
+        const raw = await searchRepos(q, { perPage: Math.min(limit + 20, 100), token });
         lastItems = filterExcluded(raw).map((r, i) => mapItem(r, i + 1)).slice(0, limit);
         if (lastItems.length >= limit) return lastItems;
       } catch (e) {
@@ -107,7 +110,7 @@ export class SearchApiSource {
     // 注意：限流类失败不切备用（备用同样会 403，白耗配额）
     if (lastErr && String(lastErr.message).match(/rate_limited|^http_4/)) throw lastErr;
     const fallbackQ = `pushed:>${dateStr(3)} stars:>1000 archived:false`;
-    const raw = await searchRepos(fallbackQ, { perPage: 30, token: this.token });
+    const raw = await searchRepos(fallbackQ, { perPage: 30, token });
     return filterExcluded(raw).map((r, i) => mapItem(r, i + 1)).slice(0, limit);
   }
 }

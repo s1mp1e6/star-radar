@@ -24,7 +24,12 @@
   <main class="container">
     <div class="page-head">
       <h1>设置</h1>
-      <span class="sub">AI 供应商配置将在 M4 里程碑上线</span>
+      <span class="sub">所有配置保存在云端 D1，换设备自动同步</span>
+    </div>
+
+    <div class="warn-banner" id="tokenBanner" style="display:none">
+      ⚠️ <b>尚未保存管理员令牌</b>：下方「AI 供应商 / GitHub Token」等配置将无法保存（会提示 Token 无效）。
+      请先在「🔑 管理员令牌」粘贴令牌并点保存——令牌在你的项目目录 <code>admin-token.txt</code> 文件里（记事本打开复制）。
     </div>
 
     <div class="card" style="max-width:720px">
@@ -43,16 +48,35 @@
     <div class="card" style="max-width:720px">
       <div class="card-title" style="justify-content:space-between;display:flex;flex-wrap:wrap;gap:8px">
         <span>🤖 AI 供应商</span>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <select class="select" id="presetSel" style="max-width:230px;width:auto"></select>
           <button class="btn ghost" id="addProviderBtn">＋ 添加</button>
           <button class="btn btn-primary" id="saveProvidersBtn">保存全部</button>
+          <span class="save-status" id="saveStatus"></span>
         </div>
       </div>
       <div id="providersBox"></div>
       <div class="hint" style="margin-top:10px">
         密钥存 D1 且界面脱敏（已保存的 key 显示占位，留空=不改）。「测试」发 1-token 请求验证连通，
         「获取模型」从厂商实时拉列表。生成时按「启用 + 顺序」failover，1 分钟内连挂 2 次自动熔断 10 分钟。
+      </div>
+    </div>
+
+    <div class="card" style="max-width:720px">
+      <div class="card-title">🐙 GitHub Token（可选，推荐）</div>
+      <div class="form-row">
+        <label for="githubTokenInput">Fine-grained PAT（仅 Public Repositories 只读）</label>
+        <input class="input" type="password" id="githubTokenInput" placeholder="留空 = 不修改" autocomplete="off">
+        <div class="hint" id="githubTokenStatus">状态：加载中…</div>
+        <div class="hint">
+          把 GitHub API 配额从 60 次/小时提升到 5000 次/小时（共享 IP 配额被耗尽时尤其重要）。
+          创建：GitHub → Settings → Developer settings → Fine-grained tokens → 只勾 Public Repositories 只读。
+          已保存的 key 只显示状态、不回显内容；也可用 CF Secret（wrangler secret put GITHUB_TOKEN）配置，二者存一即可。
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" id="saveGhTokenBtn">保存 Token</button>
+        <button class="btn ghost" id="clearGhTokenBtn">清空</button>
       </div>
     </div>
 
@@ -68,7 +92,8 @@
         <div class="hint" style="margin:0">
           开源雷达 StarRadar v0.1.0 · 0 元成本的开源项目发现与追踪系统<br>
           架构：Cloudflare Workers + D1（免费额度）· 数据源：GitHub 官方 Search API<br>
-          抓取：每天北京 05:00 自动运行 · 收藏跨设备同步 · AI 详解（M4）/ 星标追踪（M5）开发中
+          已上线：每日 05:00 自动抓取 · 跨设备收藏 · 星标追踪（21:00）· AI 六维详解 · 排行榜<br>
+          源码：<a href="https://github.com/s1mp1e6/star-radar" target="_blank" rel="noopener">github.com/s1mp1e6/star-radar</a>
         </div>
       </div>
     </div>

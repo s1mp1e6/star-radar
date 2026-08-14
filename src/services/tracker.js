@@ -1,6 +1,6 @@
 /* 追踪同步：收藏仓库 → GraphQL 批量拉取 → 快照更新 + star_history 时间序列（ADR-0003）
  * 每仓库每天 1 行；分片 50 个仓库/请求；全程 ≤5 子请求 + 审计 */
-import { insertCronRun, finishCronRun } from "../lib/db.js";
+import { insertCronRun, finishCronRun, getGitHubToken } from "../lib/db.js";
 import { fetchReposGraphQL, parseRepoData } from "../adapters/github-graphql.js";
 
 const CHUNK = 50; // 预留分片：收藏超 50 时自动多请求（ADR-0003 后果）
@@ -18,9 +18,10 @@ export async function trackerSync(env, bj) {
     }
 
     const allData = [];
+    const token = await getGitHubToken(env);
     for (let i = 0; i < repos.length; i += CHUNK) {
       const chunk = repos.slice(i, i + CHUNK);
-      const json = await fetchReposGraphQL(chunk, env.GITHUB_TOKEN || null);
+      const json = await fetchReposGraphQL(chunk, token);
       allData.push(...parseRepoData(chunk, json));
     }
 

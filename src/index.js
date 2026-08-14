@@ -11,6 +11,7 @@ import { handleAdminTrigger } from "./routes/admin.js";
 import { handleFavs } from "./routes/favs.js";
 import { handleLeaderboard } from "./routes/leaderboard.js";
 import { handleProviders, handleProviderModels, handleProviderTest, handlePresets } from "./routes/providers.js";
+import { handleGithubToken } from "./routes/settings.js";
 
 const ROUTES = [
   { method: "GET", path: "/api/v1/dates", handler: (r, e) => handleDates(e) },
@@ -26,6 +27,8 @@ const ROUTES = [
   { method: "GET", path: "/api/v1/providers/presets", handler: (r, e) => handlePresets(r, e) },
   { method: "POST", path: "/api/v1/providers/models", handler: (r, e) => handleProviderModels(r, e) },
   { method: "POST", path: "/api/v1/providers/test", handler: (r, e) => handleProviderTest(r, e) },
+  { method: "GET", path: "/api/v1/settings/github-token", handler: (r, e) => handleGithubToken(r, e) },
+  { method: "POST", path: "/api/v1/settings/github-token", handler: (r, e) => handleGithubToken(r, e) },
   { method: "GET", path: "/api/v1/debug", handler: (r, e) => handleDebug(r, e) },
   { method: "POST", path: "/api/v1/admin/trigger", handler: (r, e) => handleAdminTrigger(r, e) },
 ];

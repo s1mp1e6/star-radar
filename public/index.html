@@ -22,7 +22,17 @@
   </header>
 
   <main class="container">
-    <div class="page-head">
+    <div class="hero">
+      <h1>开源雷达</h1>
+      <p>每天自动发现 GitHub 上值得关注的新项目 · 收藏即追踪 · AI 深度详解</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="v" id="statDays">–</div><div class="k">天存档</div></div>
+        <div class="hero-stat"><div class="v" id="statProjects">–</div><div class="k">个项目</div></div>
+        <div class="hero-stat"><div class="v" id="statFavs">–</div><div class="k">个收藏</div></div>
+      </div>
+    </div>
+
+    <div class="page-head" style="margin-top:26px">
       <h1>日报存档</h1>
       <span class="sub">每天北京时间 05:00 自动抓取 GitHub 新星榜前 25</span>
     </div>
@@ -31,7 +41,7 @@
     <div id="statusBox"></div>
   </main>
 
-  <div class="footer">开源雷达 StarRadar · 数据来自 GitHub 官方 API</div>
+  <div class="footer">开源雷达 StarRadar v0.1.1 · 数据来自 GitHub 官方 API · 0 元成本运行</div>
 
   <script type="module" src="assets/app.js"></script>
   <script type="module" src="assets/pages/index.js"></script>
