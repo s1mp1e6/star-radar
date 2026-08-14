@@ -2,6 +2,17 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/) 与 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.1.2] - 2026-08-14
+
+产品化 W2：交互零死角。
+
+### Added
+
+- 骨架屏全覆盖：日报（时段+列表）、收藏、排行榜、供应商列表加载态
+- 统一状态组件 `statusCard`（空态/错误态文案与行动按钮各页一致）
+- AI 详解加载态与失败重试按钮；打开详情自动滚回顶部
+- 设置页已存令牌时自动加载系统状态
+
 ## [0.1.1] - 2026-08-14
 
 产品化 W1：视觉系统第一轮 + 发布自检。
