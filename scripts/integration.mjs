@@ -139,7 +139,12 @@ async function main() {
     assert(r.d?.ok && r.d.data.url_configured === true, "通知配置未回读");
     console.log(`✅ 通知 保存/测试/脱敏回读（${r.d.data.url_suffix}）`);
 
-    // 8. 健康检查 + 调试
+    // 8. 统计报表
+    r = await j("/stats");
+    assert(r.d?.ok && Array.isArray(r.d.data.trend) && typeof r.d.data.portfolio?.total === "number", `统计结构异常: ${JSON.stringify(r.d?.error || r.d?.data)}`);
+    console.log(`✅ 统计报表（趋势 ${r.d.data.trend.length} 天 · 组合总星 ${r.d.data.portfolio.total}）`);
+
+    // 9. 健康检查 + 调试
     r = await j("/health");
     assert(r.d?.ok && typeof r.d.data.degraded === "boolean", "health 结构异常");
     r = await j("/debug", { auth: true });

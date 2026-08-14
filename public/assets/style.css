@@ -323,6 +323,11 @@ html[data-theme="light"] .warn-banner { background: #fff8e8; color: #a06a10; }
   outline: 2px solid var(--accent-2); outline-offset: 2px;
 }
 
+/* ---------- 趋势图（W6） ---------- */
+.trend-bar { fill: var(--accent); opacity: .85; transition: opacity .15s; }
+.trend-bar:hover { opacity: 1; }
+.trend-label { fill: var(--muted); font-size: 10px; }
+
 /* ---------- 触控反馈（移动端/触屏 :active） ---------- */
 .btn:active, .icon-btn:active, .nav a:active, .tab:active, .chip:active,
 .date-card:active, .list-item:active, .hour-card:active, .lb-row:active {

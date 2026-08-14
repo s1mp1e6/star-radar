@@ -2,6 +2,16 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/) 与 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.1.6] - 2026-08-14
+
+产品化 W6：统计报表。
+
+### Added
+
+- `GET /api/v1/stats`：趋势（近 30 天项目数/星标总量）+ 收藏组合（总星标/语言分布）+ 涨幅榜（纯函数计算，可单测）
+- 首页「近 14 天趋势」柱状图（悬停显示当日项目数与星标总量）
+- 收藏页「收藏组合」视图：总星标 / 收藏数 / 语言分布 / 涨幅 Top3
+
 ## [0.1.5] - 2026-08-14
 
 产品化 W5：通知推送。

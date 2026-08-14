@@ -89,12 +89,44 @@ function render(favs) {
   );
 }
 
+/* 组合视图（W6）：总星标 / 语言分布 / 涨幅 Top */
+function renderPortfolio(s) {
+  const box = document.getElementById("portfolioBox");
+  if (!s || !s.fav_count) {
+    box.innerHTML = "";
+    return;
+  }
+  const langs = (s.portfolio?.langs || [])
+    .map((l) => `<span class="meta-item" style="margin-right:12px"><i class="dot" style="background:${langColor(l.name)}"></i>${esc(l.name)} ×${l.count}</span>`)
+    .join("");
+  const gainers = (s.gainers || [])
+    .slice(0, 3)
+    .map((g) => `<div class="list-item" style="padding:6px 0;border:none"><span style="font-weight:700;margin-right:auto">${esc(g.repo)}</span><span class="badge green">↑ +${fmtFull(g.gain)} 星</span></div>`)
+    .join("");
+  box.innerHTML = `
+    <div class="card" style="padding:16px 18px">
+      <div class="card-title" style="justify-content:space-between;display:flex">
+        <span>💼 收藏组合</span>
+        <span class="save-status">自收藏以来</span>
+      </div>
+      <div class="stat-grid" style="margin:0 0 10px">
+        <div class="stat-box"><div class="k">总星标</div><div class="v">${fmtFull(s.portfolio?.total || 0)}</div></div>
+        <div class="stat-box"><div class="k">收藏数</div><div class="v">${s.fav_count}</div></div>
+      </div>
+      <div class="meta" style="margin-bottom:8px">${langs || '<span class="meta-item muted">暂无语言数据</span>'}</div>
+      <div class="card-title" style="font-size:13px">📈 涨幅 Top</div>
+      ${gainers || '<div class="hint">追踪满 2 天后这里会出现涨幅排行</div>'}
+    </div>`;
+}
+
 async function load() {
   // 加载态：列表骨架
   document.getElementById("listCard").style.display = "";
   listBox.innerHTML = `${'<div class="skel-row"></div>'.repeat(4)}`;
   try {
-    render(await apiGet("/favs?history=1"));
+    const [favs, stats] = await Promise.all([apiGet("/favs?history=1"), apiGet("/stats")]);
+    render(favs);
+    renderPortfolio(stats);
   } catch (e) {
     listBox.innerHTML = "";
     statusBox.innerHTML = statusCard("⚠️", "加载失败", e.message, '<button class="btn btn-primary" onclick="location.reload()">重试</button>');

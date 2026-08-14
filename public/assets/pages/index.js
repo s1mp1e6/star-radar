@@ -18,6 +18,45 @@ function fillStats(dates) {
     .catch(() => (document.getElementById("statFavs").textContent = "–"));
 }
 
+/* ---------- 趋势图（W6）：近 14 天每日项目数柱状图 ---------- */
+function renderTrend(trend) {
+  const box = document.getElementById("trendBox");
+  if (!trend || trend.length === 0) return;
+  const data = trend.slice(-14);
+  const W = 560;
+  const H = 130;
+  const pad = { t: 10, b: 22, l: 6, r: 6 };
+  const max = Math.max(...data.map((d) => d.project_count), 1);
+  const bw = (W - pad.l - pad.r) / data.length;
+  const bars = data
+    .map((d, i) => {
+      const h = ((H - pad.t - pad.b) * d.project_count) / max;
+      const x = pad.l + i * bw + bw * 0.18;
+      const y = H - pad.b - h;
+      return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw * 0.64).toFixed(1)}" height="${h.toFixed(1)}" rx="3" class="trend-bar">
+        <title>${d.date}：${d.project_count} 个项目 · 共 ${d.total_stars.toLocaleString("zh-CN")} 星</title>`;
+    })
+    .join("");
+  const labels = data
+    .map((d, i) =>
+      i % 2 === 0
+        ? `<text x="${(pad.l + i * bw + bw / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle" class="trend-label">${d.date.slice(5).replace("-", "/")}</text>`
+        : ""
+    )
+    .join("");
+  const totalStars = data.reduce((s, d) => s + d.total_stars, 0);
+  box.innerHTML = `
+    <div class="card" style="padding:16px 18px">
+      <div class="card-title" style="justify-content:space-between;display:flex">
+        <span>📈 近 14 天趋势</span>
+        <span class="save-status">累计收录 ${totalStars.toLocaleString("zh-CN")} 星</span>
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block" role="img" aria-label="每日项目数柱状图">
+        ${bars}${labels}
+      </svg>
+    </div>`;
+}
+
 function render(dates) {
   skelBox.innerHTML = "";
   statusBox.innerHTML = "";
@@ -69,6 +108,9 @@ async function load() {
     const dates = await apiGet("/dates");
     if (dates.length) render(dates);
     else renderEmpty();
+    apiGet("/stats")
+      .then((s) => renderTrend(s.trend))
+      .catch(() => {});
   } catch (e) {
     skelBox.innerHTML = "";
     statusBox.innerHTML = statusCard("⚠️", "加载失败", e.message, '<button class="btn btn-primary" onclick="location.reload()">重试</button>');
