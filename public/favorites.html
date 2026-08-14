@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的收藏 · 开源雷达</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>">
+  <script>document.documentElement.dataset.theme = localStorage.getItem("sr-theme") || "dark";</script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="logo">🛰️</span>开源雷达</a>
+    <nav class="nav">
+      <a href="index.html">日报</a>
+      <a href="favorites.html" class="active">收藏</a>
+      <a href="leaderboard.html">排行</a>
+      <a href="settings.html">设置</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="icon-btn" id="themeBtn" title="切换主题">☀️</button>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <h1>我的收藏</h1>
+      <span class="sub">收藏即追踪 · 每天 21:00 自动同步星标与 release（跨设备一致）</span>
+      <button class="btn ghost" id="syncBtn" style="margin-left:auto">🔄 同步追踪</button>
+    </div>
+    <div class="card" id="listCard">
+      <div class="card-title">共 <span id="count">0</span> 个项目</div>
+      <div id="listBox"></div>
+    </div>
+    <div id="statusBox"></div>
+  </main>
+
+  <div class="footer">开源雷达 StarRadar · 收藏数据存储在 D1，任何设备打开同一网址均一致</div>
+
+  <script type="module" src="assets/app.js"></script>
+  <script type="module" src="assets/pages/favs.js"></script>
+</body>
+</html>

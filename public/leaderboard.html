@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>排行榜 · 开源雷达</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+  <script>document.documentElement.dataset.theme = localStorage.getItem("sr-theme") || "dark";</script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="logo">🛰️</span>开源雷达</a>
+    <nav class="nav">
+      <a href="index.html">日报</a>
+      <a href="favorites.html">收藏</a>
+      <a href="leaderboard.html" class="active">排行</a>
+      <a href="settings.html">设置</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="icon-btn" id="themeBtn" title="切换主题">☀️</button>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <h1>出现频率榜</h1>
+      <span class="sub">同一天出现多次只计 1 天 · 点击跳转到最近一次日报</span>
+    </div>
+    <div class="range-tabs" id="rangeTabs" style="margin-bottom:16px">
+      <button class="range-tab active" data-range="all">全部</button>
+      <button class="range-tab" data-range="7d">近 7 天</button>
+    </div>
+    <div class="card" id="lbCard">
+      <div id="lbBox"></div>
+    </div>
+    <div id="statusBox"></div>
+  </main>
+
+  <div class="footer">开源雷达 StarRadar · 排行榜基于历史存档统计</div>
+
+  <script type="module" src="assets/app.js"></script>
+  <script type="module" src="assets/pages/leaderboard.js"></script>
+</body>
+</html>

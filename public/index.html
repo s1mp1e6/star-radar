@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>开源雷达 · 日报存档</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛰️</text></svg>">
+  <script>document.documentElement.dataset.theme = localStorage.getItem("sr-theme") || "dark";</script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="logo">🛰️</span>开源雷达</a>
+    <nav class="nav">
+      <a href="index.html" class="active">日报</a>
+      <a href="favorites.html">收藏</a>
+      <a href="leaderboard.html">排行</a>
+      <a href="settings.html">设置</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="icon-btn" id="themeBtn" title="切换主题">☀️</button>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <h1>日报存档</h1>
+      <span class="sub">每天北京时间 05:00 自动抓取 GitHub 新星榜前 25</span>
+    </div>
+    <div id="skelBox"></div>
+    <div class="date-grid" id="grid"></div>
+    <div id="statusBox"></div>
+  </main>
+
+  <div class="footer">开源雷达 StarRadar · 数据来自 GitHub 官方 API</div>
+
+  <script type="module" src="assets/app.js"></script>
+  <script type="module" src="assets/pages/index.js"></script>
+</body>
+</html>

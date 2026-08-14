@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设置 · 开源雷达</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+  <script>document.documentElement.dataset.theme = localStorage.getItem("sr-theme") || "dark";</script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="logo">🛰️</span>开源雷达</a>
+    <nav class="nav">
+      <a href="index.html">日报</a>
+      <a href="favorites.html">收藏</a>
+      <a href="leaderboard.html">排行</a>
+      <a href="settings.html" class="active">设置</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="icon-btn" id="themeBtn" title="切换主题">☀️</button>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <h1>设置</h1>
+      <span class="sub">AI 供应商配置将在 M4 里程碑上线</span>
+    </div>
+
+    <div class="card" style="max-width:720px">
+      <div class="card-title">🔑 管理员令牌</div>
+      <div class="form-row">
+        <label for="tokenInput">ADMIN_TOKEN</label>
+        <input class="input" type="password" id="tokenInput" placeholder="粘贴你的管理员密码" autocomplete="off">
+        <div class="hint">
+          令牌由部署者设置（<code>npx wrangler secret put ADMIN_TOKEN</code>），仅保存在本浏览器 localStorage，
+          用于收藏/删除等写操作。留空则写操作会被拒绝。
+        </div>
+      </div>
+      <button class="btn btn-primary" id="saveTokenBtn">保存令牌</button>
+    </div>
+
+    <div class="card" style="max-width:720px">
+      <div class="card-title" style="justify-content:space-between;display:flex;flex-wrap:wrap;gap:8px">
+        <span>🤖 AI 供应商</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="select" id="presetSel" style="max-width:230px;width:auto"></select>
+          <button class="btn ghost" id="addProviderBtn">＋ 添加</button>
+          <button class="btn btn-primary" id="saveProvidersBtn">保存全部</button>
+        </div>
+      </div>
+      <div id="providersBox"></div>
+      <div class="hint" style="margin-top:10px">
+        密钥存 D1 且界面脱敏（已保存的 key 显示占位，留空=不改）。「测试」发 1-token 请求验证连通，
+        「获取模型」从厂商实时拉列表。生成时按「启用 + 顺序」failover，1 分钟内连挂 2 次自动熔断 10 分钟。
+      </div>
+    </div>
+
+    <div class="card" style="max-width:720px">
+      <div class="card-title">📊 系统状态</div>
+      <div id="sysStatus"></div>
+      <button class="btn ghost" id="loadStatusBtn">加载状态</button>
+    </div>
+
+    <div class="card" style="max-width:720px">
+      <div class="card-title">ℹ️ 关于</div>
+      <div class="form-row">
+        <div class="hint" style="margin:0">
+          开源雷达 StarRadar v0.1.0 · 0 元成本的开源项目发现与追踪系统<br>
+          架构：Cloudflare Workers + D1（免费额度）· 数据源：GitHub 官方 Search API<br>
+          抓取：每天北京 05:00 自动运行 · 收藏跨设备同步 · AI 详解（M4）/ 星标追踪（M5）开发中
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="footer">开源雷达 StarRadar</div>
+
+  <!-- 模型选择弹窗 -->
+  <div class="modal-overlay" id="modelModal" hidden>
+    <div class="modal">
+      <h3 style="margin-bottom:10px">选择模型</h3>
+      <input class="input" id="modelSearch" placeholder="搜索模型名…" style="margin-bottom:10px">
+      <div id="modelList" style="max-height:320px;overflow-y:auto"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:12px">
+        <button class="btn ghost" id="modelCancel">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="assets/app.js"></script>
+  <script type="module" src="assets/pages/settings.js"></script>
+  <script type="module" src="assets/pages/settings-providers.js"></script>
+</body>
+</html>

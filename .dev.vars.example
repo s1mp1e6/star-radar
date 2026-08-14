@@ -1,0 +1,3 @@
+# 本地开发环境变量：复制本文件为 .dev.vars 并填写（.dev.vars 已被 .gitignore 排除）
+# 部署时用真实 secret：npx wrangler secret put ADMIN_TOKEN
+ADMIN_TOKEN=change-me

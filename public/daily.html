@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日报详情 · 开源雷达</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛰️</text></svg>">
+  <script>document.documentElement.dataset.theme = localStorage.getItem("sr-theme") || "dark";</script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="logo">🛰️</span>开源雷达</a>
+    <nav class="nav">
+      <a href="index.html" class="active">日报</a>
+      <a href="favorites.html">收藏</a>
+      <a href="leaderboard.html">排行</a>
+      <a href="settings.html">设置</a>
+    </nav>
+    <span class="spacer"></span>
+    <button class="icon-btn" id="themeBtn" title="切换主题">☀️</button>
+  </header>
+
+  <main class="container">
+    <div class="breadcrumb"><a href="index.html">日报存档</a> / <span id="crumbDate"></span></div>
+    <div class="page-head">
+      <h1 id="pageTitle">日报</h1>
+      <span class="sub" id="pageSub"></span>
+    </div>
+
+    <!-- 层1：时段 -->
+    <div class="hour-row" id="hourRow"></div>
+
+    <!-- 层2：项目列表 -->
+    <div class="card" id="listCard" style="display:none">
+      <div class="card-title" id="listTitle"></div>
+      <div id="listBox"></div>
+    </div>
+
+    <!-- 层3：详情 -->
+    <div class="card" id="detailCard" style="display:none">
+      <div class="detail-head">
+        <div style="flex:1;min-width:0">
+          <h2 id="dName"></h2>
+          <div class="meta" style="margin-top:4px"><span id="dBadge"></span></div>
+        </div>
+        <button class="btn ghost" id="dBack">← 返回列表</button>
+      </div>
+      <p class="detail-desc" id="dDesc"></p>
+      <div class="stat-grid" id="dStats"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn fav" id="dFav">☆ 收藏</button>
+        <a class="btn btn-primary" id="dLink" href="#" target="_blank" rel="noopener">在 GitHub 打开 ↗</a>
+      </div>
+      <div class="form-row" style="margin-top:16px">
+        <div id="dAi"></div>
+      </div>
+    </div>
+
+    <div id="statusBox"></div>
+  </main>
+
+  <div class="footer">开源雷达 StarRadar · 数据来自 GitHub 官方 API</div>
+
+  <script type="module" src="assets/app.js"></script>
+  <script type="module" src="assets/pages/daily.js"></script>
+</body>
+</html>

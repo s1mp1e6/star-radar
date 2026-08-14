@@ -1,0 +1,24 @@
+name = "star-radar"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+# ── 静态资源（public/） ──
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# ── D1 数据库 ──
+[[d1_databases]]
+binding = "DB"
+database_name = "star-radar-db"
+database_id = "225b03d0-ecb8-4074-aa0f-d3dd5bf821ba"   # ⚠️ M6 部署前替换：npx wrangler d1 create star-radar-db 输出的 id
+
+# ── 定时任务（CF cron 是 UTC，北京 = UTC+8）──
+# 北京 05:00 = UTC 21:00(前日) → 每日管线：抓取 25 项 + 去重入库 + 审计 + 漏跑补抓
+# 北京 06:00 = UTC 22:00(前日) → AI 增量生成（分批 + 22s 截止）
+# 北京 21:00 = UTC 13:00       → 追踪同步（GraphQL 批量更新收藏）
+[triggers]
+crons = ["0 21 * * *", "0 22 * * *", "0 13 * * *"]
+
+[vars]
+CORS_ORIGIN = "*"
