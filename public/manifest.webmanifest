@@ -1,0 +1,13 @@
+{
+  "name": "开源雷达 StarRadar",
+  "short_name": "开源雷达",
+  "description": "GitHub 开源项目发现与追踪：每日新星榜、历史存档、跨设备收藏、AI 深度详解",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e16",
+  "theme_color": "#0a0e16",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

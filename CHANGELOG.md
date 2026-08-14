@@ -2,6 +2,21 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/) 与 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.1.3] - 2026-08-14
+
+产品化 W3：移动端打磨。
+
+### Added
+
+- PWA 可安装：manifest + SVG 图标 + theme-color 随主题动态同步
+- 移动端安全区适配（viewport-fit=cover + env(safe-area-inset-*)）
+
+### Changed
+
+- 移动端布局：顶栏导航横滑、卡片单列、表单全宽堆叠、时段行横滑、排行榜换行
+- 触控目标：主导航/图标按钮 44px、按钮 40px、按压反馈
+- 决策：不做 Service Worker 离线壳（API 驱动产品离线无意义，避免缓存事故），记录于 PRODUCT.md
+
 ## [0.1.2] - 2026-08-14
 
 产品化 W2：交互零死角。

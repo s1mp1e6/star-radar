@@ -99,6 +99,8 @@ export function applyTheme(t) {
   localStorage.setItem("sr-theme", t);
   const btn = document.getElementById("themeBtn");
   if (btn) btn.textContent = t === "dark" ? "☀️" : "🌙";
+  // 同步浏览器地址栏/状态栏颜色（PWA 观感）
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", t === "dark" ? "#0a0e16" : "#f5f7fb");
 }
 function initTheme() {
   applyTheme(localStorage.getItem("sr-theme") || "dark");

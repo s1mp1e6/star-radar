@@ -323,11 +323,42 @@ html[data-theme="light"] .warn-banner { background: #fff8e8; color: #a06a10; }
   outline: 2px solid var(--accent-2); outline-offset: 2px;
 }
 
+/* ---------- 触控反馈（移动端/触屏 :active） ---------- */
+.btn:active, .icon-btn:active, .nav a:active, .tab:active, .chip:active,
+.date-card:active, .list-item:active, .hour-card:active, .lb-row:active {
+  transform: scale(.97);
+}
+.date-card, .list-item, .hour-card, .lb-row { transition: transform .12s ease, border-color .15s ease, box-shadow .15s ease; }
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 760px) {
-  .topbar { padding: 10px 14px; flex-wrap: wrap; }
-  .nav a { padding: 6px 11px; font-size: 12.5px; }
-  .container { padding: 18px 14px 50px; }
-  .list-item { flex-wrap: wrap; }
-  .hour-card { min-width: 90px; }
+  .topbar { padding: calc(10px + env(safe-area-inset-top)) 12px 10px; gap: 8px; flex-wrap: nowrap; }
+  .brand { font-size: 15px; }
+  .nav { flex: 1; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { padding: 11px 14px; white-space: nowrap; }
+  .icon-btn { width: 44px; height: 44px; font-size: 17px; }
+  .container { padding: 16px 14px calc(44px + env(safe-area-inset-bottom)); }
+  .btn { min-height: 40px; }
+  .btn.fav { min-height: 34px; padding: 6px 12px; }
+  .page-head h1 { font-size: 21px; }
+  .hero { padding-top: 22px; }
+  .hero h1 { font-size: 32px; }
+  .hero-stats { gap: 8px; }
+  .hero-stat { flex: 1; min-width: 0; padding: 10px 6px; }
+  .hero-stat .v { font-size: 18px; }
+  .date-grid { grid-template-columns: 1fr; }
+  .hour-row { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .hour-card { flex: 0 0 auto; min-width: 96px; }
+  .list-item { gap: 10px; }
+  .list-item .meta { width: 100%; }
+  .lb-row { gap: 10px; flex-wrap: wrap; }
+  .lb-row .meta { width: 100%; margin-left: 44px; }
+  .stat-grid, .stat-grid2 { grid-template-columns: repeat(2, 1fr); }
+  .prow .input, .prow .select { flex-basis: 100%; }
+  .modal-overlay { padding: 12px; align-items: flex-end; }
+  .modal { border-radius: 18px 18px 0 0; max-height: 85vh; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); }
+  .toast-wrap { right: 12px; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); }
+  .toast { justify-content: center; text-align: center; }
+  .footer { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
 }
