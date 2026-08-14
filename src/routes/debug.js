@@ -5,8 +5,8 @@ import { requireToken } from "../lib/auth.js";
 const TABLES = ["projects", "favs", "star_history", "providers", "cron_runs"];
 
 export async function handleDebug(request, env) {
-  const authErr = requireToken(request, env);
-  if (authErr) return fail(authErr.error, authErr.msg, 401);
+  const authErr = await requireToken(request, env);
+  if (authErr) return fail(authErr.error, authErr.msg, authErr.status || 401);
 
   try {
     const counts = {};

@@ -51,6 +51,11 @@ check("github-token 状态接口", async () => {
   const { d } = await j(`${BASE}/api/v1/settings/github-token`);
   assert(d?.ok === true && typeof d.data.has_token === "boolean", "结构异常");
 });
+check("health 健康检查", async () => {
+  const { r, d } = await j(`${BASE}/api/v1/health`);
+  assert(r.ok && d?.ok === true && typeof d.data.degraded === "boolean", `结构异常: ${JSON.stringify(d)}`);
+  console.log(`  ℹ️ degraded=${d.data.degraded} · 最新数据 ${d.data.latest_data_date}`);
+});
 if (token) {
   check("debug 无 token → 401", async () => {
     const { r } = await j(`${BASE}/api/v1/debug`);

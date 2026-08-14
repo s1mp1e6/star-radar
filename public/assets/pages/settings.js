@@ -78,6 +78,20 @@ function renderStatus(d) {
       .join("") || '<div class="hint">暂无运行记录</div>'}`;
 }
 
+/* 服务健康指示（公开 /health 接口，对应外部监控） */
+async function renderHealth() {
+  const el = document.getElementById("healthChip");
+  if (!el) return;
+  try {
+    const d = await api("/health");
+    el.innerHTML = d.degraded
+      ? '<span class="badge gray">⚠️ 服务降级（最近抓取异常）</span>'
+      : '<span class="badge green">✅ 服务健康</span>';
+  } catch {
+    el.innerHTML = '<span class="badge gray">健康检查失败</span>';
+  }
+}
+
 document.getElementById("loadStatusBtn").addEventListener("click", async () => {
   try {
     renderStatus(await api("/debug"));
@@ -89,6 +103,7 @@ document.getElementById("loadStatusBtn").addEventListener("click", async () => {
 
 loadGhStatus();
 updateTokenBanner();
+renderHealth();
 
 /* 令牌已存在时自动加载系统状态（省一次点击） */
 if (getToken()) {

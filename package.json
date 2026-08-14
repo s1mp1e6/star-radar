@@ -12,7 +12,9 @@
     "test": "node --test \"tests/*.test.js\"",
     "check": "node scripts/check.js",
     "smoke": "node scripts/smoke.mjs",
-    "smoke:scrape": "node scripts/smoke.mjs --scrape"
+    "smoke:scrape": "node scripts/smoke.mjs --scrape",
+    "integration": "node scripts/integration.mjs",
+    "db:backup": "node scripts/backup.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.122.0"

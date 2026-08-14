@@ -2,6 +2,22 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/) 与 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.1.4] - 2026-08-14
+
+产品化 W4：稳定性与安全加固。
+
+### Added
+
+- 防爆破限流：管理员令牌失败 10 次/10 分钟按 IP 锁 10 分钟（429），成功自动清零
+- `GET /api/v1/health` 公开健康检查（degraded 语义，可接 UptimeRobot 等免费监控）
+- `scripts/integration.mjs` 本地全链路集成测试（自动拉起 dev+mock，9 项断言）
+- `scripts/backup.mjs` D1 远程备份到本地（docs/BACKUP.md 三层保障 + 演练记录）
+- 设置页系统状态卡片增加服务健康指示
+
+### Changed
+
+- requireToken 升级为异步（带限流），全部 8 处调用点同步升级并支持 429 状态码
+
 ## [0.1.3] - 2026-08-14
 
 产品化 W3：移动端打磨。

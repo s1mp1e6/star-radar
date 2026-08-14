@@ -17,8 +17,8 @@ const pick = (p) => ({
 });
 
 export async function handleProviders(request, env) {
-  const authErr = requireToken(request, env);
-  if (authErr) return fail(authErr.error, authErr.msg, 401);
+  const authErr = await requireToken(request, env);
+  if (authErr) return fail(authErr.error, authErr.msg, authErr.status || 401);
 
   try {
     if (request.method === "GET") {
@@ -61,8 +61,8 @@ export async function handleProviders(request, env) {
 }
 
 export async function handleProviderModels(request, env) {
-  const authErr = requireToken(request, env);
-  if (authErr) return fail(authErr.error, authErr.msg, 401);
+  const authErr = await requireToken(request, env);
+  if (authErr) return fail(authErr.error, authErr.msg, authErr.status || 401);
   const body = await request.json().catch(() => null);
   if (!body) return fail("bad_param", "请求体必须是 JSON");
   if (body.provider_id && !body.api_key) {
@@ -82,8 +82,8 @@ export async function handleProviderModels(request, env) {
 }
 
 export async function handleProviderTest(request, env) {
-  const authErr = requireToken(request, env);
-  if (authErr) return fail(authErr.error, authErr.msg, 401);
+  const authErr = await requireToken(request, env);
+  if (authErr) return fail(authErr.error, authErr.msg, authErr.status || 401);
   const body = await request.json().catch(() => null);
   if (!body) return fail("bad_param", "请求体必须是 JSON");
   if (body.provider_id && !body.api_key) {

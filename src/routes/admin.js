@@ -7,8 +7,8 @@ import { generateDailyBatch } from "../services/ai.js";
 import { trackerSync } from "../services/tracker.js";
 
 export async function handleAdminTrigger(request, env) {
-  const authErr = requireToken(request, env);
-  if (authErr) return fail(authErr.error, authErr.msg, 401);
+  const authErr = await requireToken(request, env);
+  if (authErr) return fail(authErr.error, authErr.msg, authErr.status || 401);
 
   let body;
   try {

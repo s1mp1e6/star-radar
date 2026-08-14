@@ -10,8 +10,8 @@ export async function handleGithubToken(request, env) {
     return json({ has_token: !!v, source: env.GITHUB_TOKEN ? "secret" : "settings" });
   }
 
-  const authErr = requireToken(request, env);
-  if (authErr) return fail(authErr.error, authErr.msg, 401);
+  const authErr = await requireToken(request, env);
+  if (authErr) return fail(authErr.error, authErr.msg, authErr.status || 401);
 
   const body = await request.json().catch(() => null);
   if (!body || typeof body.token !== "string") return fail("bad_param", "需要 token 字段");

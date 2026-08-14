@@ -38,8 +38,8 @@ export async function handleFavs(request, env) {
       return json(favs);
     }
 
-    const authErr = requireToken(request, env);
-    if (authErr) return fail(authErr.error, authErr.msg, 401);
+    const authErr = await requireToken(request, env);
+    if (authErr) return fail(authErr.error, authErr.msg, authErr.status || 401);
 
     if (method === "POST") {
       const body = await request.json().catch(() => null);

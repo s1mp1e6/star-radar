@@ -47,8 +47,8 @@ export async function handleProjectDetail(request, env) {
 }
 
 export async function handleGenerate(request, env, params) {
-  const authErr = requireToken(request, env);
-  if (authErr) return fail(authErr.error, authErr.msg, 401);
+  const authErr = await requireToken(request, env);
+  if (authErr) return fail(authErr.error, authErr.msg, authErr.status || 401);
   const body = await request.json().catch(() => ({}));
   try {
     const res = await generateOne(env, params.repo, {

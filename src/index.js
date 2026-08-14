@@ -12,8 +12,10 @@ import { handleFavs } from "./routes/favs.js";
 import { handleLeaderboard } from "./routes/leaderboard.js";
 import { handleProviders, handleProviderModels, handleProviderTest, handlePresets } from "./routes/providers.js";
 import { handleGithubToken } from "./routes/settings.js";
+import { handleHealth } from "./routes/health.js";
 
 const ROUTES = [
+  { method: "GET", path: "/api/v1/health", handler: (r, e) => handleHealth(e) },
   { method: "GET", path: "/api/v1/dates", handler: (r, e) => handleDates(e) },
   { method: "GET", path: "/api/v1/projects", handler: (r, e) => handleProjects(r, e) },
   { method: "GET", path: "/api/v1/projects/detail", handler: (r, e) => handleProjectDetail(r, e) },
