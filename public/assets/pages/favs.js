@@ -1,5 +1,5 @@
 /* 收藏页：跨设备收藏 + 追踪视图（星标曲线 / 涨跌 / 新 release，M5） */
-import { api, apiGet, toast, hintAuth, notifyChanged, esc, fmtFull, timeAgo, langColor, gradient, sparkPath } from "../app.js";
+import { api, apiGet, toast, hintAuth, notifyChanged, esc, fmtFull, timeAgo, langColor, gradient, sparkPath, statusCard } from "../app.js";
 
 const listBox = document.getElementById("listBox");
 const statusBox = document.getElementById("statusBox");
@@ -90,10 +90,14 @@ function render(favs) {
 }
 
 async function load() {
+  // 加载态：列表骨架
+  document.getElementById("listCard").style.display = "";
+  listBox.innerHTML = `${'<div class="skel-row"></div>'.repeat(4)}`;
   try {
     render(await apiGet("/favs?history=1"));
   } catch (e) {
-    statusBox.innerHTML = `<div class="status-card"><div class="big">⚠️</div><h3>加载失败</h3><p>${esc(e.message)}</p></div>`;
+    listBox.innerHTML = "";
+    statusBox.innerHTML = statusCard("⚠️", "加载失败", e.message, '<button class="btn btn-primary" onclick="location.reload()">重试</button>');
   }
 }
 

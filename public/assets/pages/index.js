@@ -1,5 +1,5 @@
 /* 首页：hero 统计总览 + 日期卡片网格 + 新手引导 */
-import { api, apiGet, toast, hintAuth, notifyChanged, gradient, esc } from "../app.js";
+import { api, apiGet, toast, hintAuth, notifyChanged, gradient, esc, statusCard } from "../app.js";
 
 const grid = document.getElementById("grid");
 const skelBox = document.getElementById("skelBox");
@@ -71,11 +71,7 @@ async function load() {
     else renderEmpty();
   } catch (e) {
     skelBox.innerHTML = "";
-    statusBox.innerHTML = `
-      <div class="status-card">
-        <div class="big">⚠️</div><h3>加载失败</h3><p>${esc(e.message)}</p>
-        <button class="btn btn-primary" onclick="location.reload()">重试</button>
-      </div>`;
+    statusBox.innerHTML = statusCard("⚠️", "加载失败", e.message, '<button class="btn btn-primary" onclick="location.reload()">重试</button>');
   }
 }
 

@@ -224,6 +224,21 @@ html[data-theme="dark"] .badge.gray { background: #262e3d; color: #9aa6b8; }
 }
 html[data-theme="light"] .skel::after { background: linear-gradient(90deg, transparent, rgba(0, 0, 0, .05), transparent); }
 @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+.skel-grid { display: grid; gap: 12px; }
+.skel-row { height: 56px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); position: relative; overflow: hidden; }
+.skel-row::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .06), transparent);
+  animation: shimmer 1.2s infinite;
+}
+html[data-theme="light"] .skel-row::after { background: linear-gradient(90deg, transparent, rgba(0, 0, 0, .05), transparent); }
+.skel-chip { display: inline-block; width: 110px; height: 64px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); position: relative; overflow: hidden; }
+.skel-chip::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .06), transparent);
+  animation: shimmer 1.2s infinite;
+}
+html[data-theme="light"] .skel-chip::after { background: linear-gradient(90deg, transparent, rgba(0, 0, 0, .05), transparent); }
 
 /* ---------- Toast ---------- */
 .toast-wrap { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 200; }

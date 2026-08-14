@@ -213,6 +213,7 @@ document.getElementById("saveProvidersBtn").addEventListener("click", async () =
 
 /* ---------- 初始化 ---------- */
 async function load() {
+  box.innerHTML = '<div class="hint">加载中…</div>';
   try {
     providers = (await apiGet("/providers", { cache: false })) || [];
     render();

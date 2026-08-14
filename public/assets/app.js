@@ -77,6 +77,21 @@ export function toast(msg, type) {
   }, 2600);
 }
 
+/* ---------------- 状态组件（统一空态/错误态/骨架屏，杜绝各页各写一遍） ---------------- */
+export function statusCard(icon, title, msg, actionsHTML = "") {
+  return `
+  <div class="status-card">
+    <div class="big">${icon}</div>
+    <h3>${esc(title)}</h3>
+    <p>${esc(msg)}</p>
+    ${actionsHTML}
+  </div>`;
+}
+
+export function skeletonHTML(n, cls = "skel") {
+  return `<div class="${cls}-grid">${`<div class="${cls}"></div>`.repeat(n)}</div>`;
+}
+
 /* ---------------- 主题 ---------------- */
 export function applyTheme(t) {
   if (typeof document === "undefined") return;

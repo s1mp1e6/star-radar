@@ -1,5 +1,5 @@
 /* 日报页：三层 SPA（时段 → 项目列表 → 详情） */
-import { api, apiGet, toast, hintAuth, notifyChanged, esc, fmtNum, fmtFull, langColor, gradient } from "../app.js";
+import { api, apiGet, toast, hintAuth, notifyChanged, esc, fmtNum, fmtFull, langColor, gradient, statusCard } from "../app.js";
 
 const params = new URLSearchParams(location.search);
 const date = params.get("date");
@@ -96,6 +96,7 @@ function openDetail(repo) {
   const p = group?.items.find((i) => i.repo === repo);
   if (!p) return;
   curRepo = p;
+  window.scrollTo({ top: 0, behavior: "smooth" });
   document.getElementById("detailCard").style.display = "";
   document.getElementById("listCard").style.display = "none";
   document.getElementById("dName").textContent = p.repo;
@@ -157,10 +158,17 @@ async function load() {
   }
   document.getElementById("crumbDate").textContent = date;
   document.getElementById("pageTitle").textContent = `${date.slice(5).replace("-", "/")} 日报`;
+  // 加载态：时段骨架 + 列表骨架
+  document.getElementById("hourRow").innerHTML = `${'<span class="skel-chip"></span>'.repeat(3)}`;
+  document.getElementById("listCard").style.display = "";
+  document.getElementById("listTitle").textContent = "加载中…";
+  document.getElementById("listBox").innerHTML = `${'<div class="skel-row"></div>'.repeat(6)}`;
   try {
     const rows = await apiGet(`/projects?date=${encodeURIComponent(date)}`);
     if (!rows.length) {
-      showStatus('<div class="status-card"><div class="big">📭</div><h3>这一天没有数据</h3><p>抓取任务每天北京时间 05:00 运行</p><a class="btn btn-primary" href="index.html">返回存档</a></div>');
+      document.getElementById("hourRow").innerHTML = "";
+      document.getElementById("listCard").style.display = "none";
+      showStatus(statusCard("📭", "这一天没有数据", "抓取任务每天北京时间 05:00 运行，可能还没到第一次抓取时间", '<a class="btn btn-primary" href="index.html">返回存档</a>'));
       return;
     }
     const map = {};
@@ -182,7 +190,9 @@ async function load() {
       }
     }
   } catch (e) {
-    showStatus(`<div class="status-card"><div class="big">⚠️</div><h3>加载失败</h3><p>${esc(e.message)}</p></div>`);
+    document.getElementById("hourRow").innerHTML = "";
+    document.getElementById("listCard").style.display = "none";
+    showStatus(statusCard("⚠️", "加载失败", e.message, '<button class="btn btn-primary" onclick="location.reload()">重试</button>'));
   }
 }
 
@@ -259,12 +269,13 @@ function renderAiPending(p) {
 
 async function loadAi(p, force = false) {
   const box = document.getElementById("dAi");
+  box.innerHTML = '<div class="hint">🤖 AI 详解加载中…</div>';
   try {
     const row = await apiGet(`/projects/detail?repo=${encodeURIComponent(p.repo)}&date=${encodeURIComponent(p.date)}`, { cache: !force });
     if (row.detail && row.detail.intro) renderAiDetail(row.detail);
     else renderAiPending(row);
   } catch (e) {
-    box.innerHTML = `<div class="hint">AI 详解加载失败: ${esc(e.message)}</div>`;
+    box.innerHTML = `<div class="hint">⚠️ AI 详解加载失败: ${esc(e.message)} <button class="btn ghost" style="padding:3px 10px;margin-left:8px" onclick="location.reload()">重试</button></div>`;
   }
 }
 apiGet("/favs")

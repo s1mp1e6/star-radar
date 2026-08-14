@@ -1,5 +1,5 @@
 /* 排行榜页：出现频率榜（全部/近 7 天） */
-import { apiGet, esc, fmtNum, langColor } from "../app.js";
+import { apiGet, esc, fmtNum, langColor, statusCard } from "../app.js";
 
 const lbBox = document.getElementById("lbBox");
 const statusBox = document.getElementById("statusBox");
@@ -32,10 +32,13 @@ function render(rows) {
 }
 
 async function load() {
+  // 加载态：列表骨架
+  lbBox.innerHTML = `${'<div class="skel-row"></div>'.repeat(5)}`;
   try {
     render(await apiGet(`/leaderboard?range=${range}`));
   } catch (e) {
-    statusBox.innerHTML = `<div class="status-card"><div class="big">⚠️</div><h3>加载失败</h3><p>${esc(e.message)}</p></div>`;
+    lbBox.innerHTML = "";
+    statusBox.innerHTML = statusCard("⚠️", "加载失败", e.message, '<button class="btn btn-primary" onclick="location.reload()">重试</button>');
   }
 }
 

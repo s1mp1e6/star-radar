@@ -89,3 +89,10 @@ document.getElementById("loadStatusBtn").addEventListener("click", async () => {
 
 loadGhStatus();
 updateTokenBanner();
+
+/* 令牌已存在时自动加载系统状态（省一次点击） */
+if (getToken()) {
+  api("/debug")
+    .then(renderStatus)
+    .catch(() => {});
+}
