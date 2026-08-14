@@ -127,6 +127,18 @@ async function main() {
       console.log(`✅ AI 生成 + 六维度校验（by ${detail.generated_by}）`);
     }
 
+    // 7. 通知配置 + 测试消息（Webhook 指向 mock）
+    r = await j("/settings/notify", {
+      method: "POST",
+      body: JSON.stringify({ enabled: 1, url: `http://127.0.0.1:${MOCK_PORT}/v1/notify`, events: ["release", "star_spike", "daily"], star_spike_threshold: 500 }),
+    });
+    assert(r.d?.ok, "通知配置保存失败");
+    r = await j("/settings/notify/test", { method: "POST", body: JSON.stringify({}) });
+    assert(r.d?.ok && r.d.data.ok === true, `通知测试失败: ${JSON.stringify(r.d)}`);
+    r = await j("/settings/notify");
+    assert(r.d?.ok && r.d.data.url_configured === true, "通知配置未回读");
+    console.log(`✅ 通知 保存/测试/脱敏回读（${r.d.data.url_suffix}）`);
+
     // 8. 健康检查 + 调试
     r = await j("/health");
     assert(r.d?.ok && typeof r.d.data.degraded === "boolean", "health 结构异常");

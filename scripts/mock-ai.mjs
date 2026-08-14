@@ -43,6 +43,10 @@ http
     } else if (req.method === "GET" && req.url.startsWith("/v1/models")) {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ data: [{ id: "mock-model" }, { id: "mock-fail" }] }));
+    } else if (req.method === "POST" && req.url.startsWith("/v1/notify")) {
+      // 通知 Webhook 接收端（集成测试用）
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ code: 0 }));
     } else {
       res.writeHead(404);
       res.end("not found");

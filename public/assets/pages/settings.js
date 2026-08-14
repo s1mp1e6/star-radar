@@ -78,7 +78,60 @@ function renderStatus(d) {
       .join("") || '<div class="hint">暂无运行记录</div>'}`;
 }
 
-/* 服务健康指示（公开 /health 接口，对应外部监控） */
+/* ---------- 通知推送（W5） ---------- */
+async function loadNotify() {
+  try {
+    const d = await api("/settings/notify");
+    document.getElementById("notifyEnabled").checked = d.enabled;
+    document.getElementById("notifyUrlStatus").textContent = d.url_configured
+      ? `✅ 已配置（…${d.url_suffix}，不回显完整地址）`
+      : "⚠️ 未配置 Webhook URL";
+    document.getElementById("evRelease").checked = d.events.includes("release");
+    document.getElementById("evSpike").checked = d.events.includes("star_spike");
+    document.getElementById("evDaily").checked = d.events.includes("daily");
+    document.getElementById("spikeThreshold").value = d.star_spike_threshold;
+    if (d.last_error) document.getElementById("notifyError").textContent = `上次通知失败：${d.last_error}`;
+  } catch {
+    document.getElementById("notifyUrlStatus").textContent = "状态加载失败";
+  }
+}
+
+document.getElementById("saveNotifyBtn").addEventListener("click", async () => {
+  try {
+    await api("/settings/notify", {
+      method: "POST",
+      body: {
+        enabled: document.getElementById("notifyEnabled").checked,
+        url: document.getElementById("notifyUrl").value,
+        events: [
+          ...(document.getElementById("evRelease").checked ? ["release"] : []),
+          ...(document.getElementById("evSpike").checked ? ["star_spike"] : []),
+          ...(document.getElementById("evDaily").checked ? ["daily"] : []),
+        ],
+        star_spike_threshold: Number(document.getElementById("spikeThreshold").value) || 500,
+      },
+    });
+    document.getElementById("notifySaveStatus").textContent = `✅ 已保存 ${new Date().toLocaleTimeString("zh-CN")}`;
+    document.getElementById("notifyUrl").value = "";
+    toast("通知设置已保存", "success");
+    loadNotify();
+  } catch (e) {
+    document.getElementById("notifySaveStatus").textContent = "❌ 未保存";
+    if (!hintAuth(e)) toast(`保存失败: ${e.message}`);
+  }
+});
+
+document.getElementById("testNotifyBtn").addEventListener("click", async () => {
+  const url = document.getElementById("notifyUrl").value.trim();
+  try {
+    const r = await api("/settings/notify/test", { method: "POST", body: url ? { url } : {} });
+    toast(`测试消息已送达（${r.ms}ms），请查收`, "success");
+  } catch (e) {
+    if (!hintAuth(e)) toast(`测试失败: ${e.message}`);
+  }
+});
+
+loadNotify();
 async function renderHealth() {
   const el = document.getElementById("healthChip");
   if (!el) return;

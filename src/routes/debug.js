@@ -17,7 +17,7 @@ export async function handleDebug(request, env) {
     const { results: recent } = await env.DB.prepare(
       "SELECT * FROM cron_runs ORDER BY id DESC LIMIT 3"
     ).all();
-    return json({ version: "0.1.3", tables: counts, recent_cron_runs: recent || [] });
+    return json({ version: "0.1.5", tables: counts, recent_cron_runs: recent || [] });
   } catch (e) {
     return fail("db_error", `调试查询失败: ${e.message}`, 500);
   }

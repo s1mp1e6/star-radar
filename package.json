@@ -1,6 +1,6 @@
 {
   "name": "star-radar",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "private": true,
   "description": "开源雷达 StarRadar：0 元成本的 GitHub 开源项目发现与追踪系统（Cloudflare Workers + D1）",
   "type": "module",

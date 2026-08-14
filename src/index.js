@@ -13,6 +13,8 @@ import { handleLeaderboard } from "./routes/leaderboard.js";
 import { handleProviders, handleProviderModels, handleProviderTest, handlePresets } from "./routes/providers.js";
 import { handleGithubToken } from "./routes/settings.js";
 import { handleHealth } from "./routes/health.js";
+import { handleNotifyGet, handleNotifySave, handleNotifyTest } from "./routes/notify.js";
+import { sendDailyDigest } from "./services/notify.js";
 
 const ROUTES = [
   { method: "GET", path: "/api/v1/health", handler: (r, e) => handleHealth(e) },
@@ -31,6 +33,9 @@ const ROUTES = [
   { method: "POST", path: "/api/v1/providers/test", handler: (r, e) => handleProviderTest(r, e) },
   { method: "GET", path: "/api/v1/settings/github-token", handler: (r, e) => handleGithubToken(r, e) },
   { method: "POST", path: "/api/v1/settings/github-token", handler: (r, e) => handleGithubToken(r, e) },
+  { method: "GET", path: "/api/v1/settings/notify", handler: (r, e) => handleNotifyGet(e) },
+  { method: "POST", path: "/api/v1/settings/notify", handler: (r, e) => handleNotifySave(r, e) },
+  { method: "POST", path: "/api/v1/settings/notify/test", handler: (r, e) => handleNotifyTest(r, e) },
   { method: "GET", path: "/api/v1/debug", handler: (r, e) => handleDebug(r, e) },
   { method: "POST", path: "/api/v1/admin/trigger", handler: (r, e) => handleAdminTrigger(r, e) },
 ];
@@ -91,6 +96,11 @@ export default {
         await trackerSync(env, bj);
       } catch (e) {
         console.error("Tracker sync failed:", e.message);
+      }
+      try {
+        await sendDailyDigest(env, bj);
+      } catch (e) {
+        console.error("Daily digest failed:", e.message);
       }
     }
   },

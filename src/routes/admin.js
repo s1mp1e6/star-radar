@@ -5,6 +5,7 @@ import { beijingParts } from "../lib/time.js";
 import { runScrape } from "../services/scrape.js";
 import { generateDailyBatch } from "../services/ai.js";
 import { trackerSync } from "../services/tracker.js";
+import { sendDailyDigest } from "../services/notify.js";
 
 export async function handleAdminTrigger(request, env) {
   const authErr = await requireToken(request, env);
@@ -43,7 +44,15 @@ export async function handleAdminTrigger(request, env) {
         return fail("tracker_failed", `追踪同步失败: ${e.message}`, 500);
       }
     }
+    case "daily_digest": {
+      try {
+        const res = await sendDailyDigest(env, bj);
+        return json({ task: "daily_digest", result: res });
+      } catch (e) {
+        return fail("digest_failed", `日报推送失败: ${e.message}`, 500);
+      }
+    }
     default:
-      return fail("bad_task", "task 仅支持: scrape | generate | tracker");
+      return fail("bad_task", "task 仅支持: scrape | generate | tracker | daily_digest");
   }
 }

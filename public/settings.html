@@ -84,6 +84,40 @@
     </div>
 
     <div class="card" style="max-width:720px">
+      <div class="card-title">🔔 通知推送</div>
+      <div class="form-row">
+        <label style="display:flex;align-items:center;gap:8px;font-weight:600">
+          <input type="checkbox" id="notifyEnabled"> 启用通知
+        </label>
+        <div class="hint">收藏项目发生「新 release / 大涨星」或每天 21:00 日报摘要时，向你的 Webhook 推送消息。</div>
+      </div>
+      <div class="form-row">
+        <label for="notifyUrl">Webhook URL</label>
+        <input class="input" id="notifyUrl" placeholder="https://…（任意接收 JSON POST 的服务）" autocomplete="off">
+        <div class="hint" id="notifyUrlStatus">状态：加载中…</div>
+        <div class="hint">
+          获取方式（任选）：<b>Server酱</b>（免费微信推送，sct.ftqq.com 拿 SendKey 后填
+          <code>https://sctapi.ftqq.com/你的key.send</code>）· 钉钉/飞书/企业微信<b>群机器人</b>（需经其网关）
+          · 自建服务（收到 POST JSON：<code>{title, content, time}</code>）。
+        </div>
+      </div>
+      <div class="form-row">
+        <label>通知事件</label>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <label style="display:flex;gap:6px;align-items:center;font-size:13.5px"><input type="checkbox" id="evRelease"> 🔔 新 release</label>
+          <label style="display:flex;gap:6px;align-items:center;font-size:13.5px"><input type="checkbox" id="evSpike"> 🚀 大涨星（日涨幅 ≥ <input type="number" id="spikeThreshold" value="500" min="50" style="width:76px;display:inline-block" class="input"> 星）</label>
+          <label style="display:flex;gap:6px;align-items:center;font-size:13.5px"><input type="checkbox" id="evDaily"> 📡 每日摘要</label>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-primary" id="saveNotifyBtn">保存通知设置</button>
+        <button class="btn ghost" id="testNotifyBtn">发送测试消息</button>
+        <span class="save-status" id="notifySaveStatus"></span>
+      </div>
+      <div class="hint" id="notifyError" style="margin-top:8px;color:var(--red)"></div>
+    </div>
+
+    <div class="card" style="max-width:720px">
       <div class="card-title" style="justify-content:space-between;display:flex">
         <span>📊 系统状态</span><span id="healthChip"></span>
       </div>
